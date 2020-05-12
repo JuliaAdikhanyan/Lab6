@@ -13,6 +13,7 @@ public class CatalogFileLoader implements CatalogLoader {
 
     private String fileName;
 
+
     public CatalogFileLoader(String fileName) {
         this.fileName = fileName;
     }
@@ -33,6 +34,8 @@ public class CatalogFileLoader implements CatalogLoader {
                 }
                 regex(cat, line);
             }
+            s.close();
+            fis.close();
         } catch (ItemAlreadyExistsException e) {
             e.printStackTrace();
         }
