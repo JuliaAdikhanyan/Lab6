@@ -20,24 +20,19 @@ public class CatalogFileLoader implements CatalogLoader {
 
     @Override
     public void load(ItemCatalog cat) throws IOException {
-        File f = new File(fileName);
-        FileInputStream fis;
-        String line;
-        try {
-            fis = new FileInputStream(f);
-            Scanner s = new Scanner(fis);
-
+        try (Scanner s = new Scanner(new FileInputStream(new File(fileName)))) {
+            String line;
             while (s.hasNextLine()) {
                 line = s.nextLine();
                 if (line.length() == 0) {
                     break;
                 }
-                regex(cat, line);
+                try {
+                    regex(cat, line);
+                } catch (ItemAlreadyExistsException e) {
+                    e.printStackTrace();
+                }
             }
-            s.close();
-            fis.close();
-        } catch (ItemAlreadyExistsException e) {
-            e.printStackTrace();
         }
     }
 
@@ -49,10 +44,12 @@ public class CatalogFileLoader implements CatalogLoader {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String string = new String(line.getBytes(StandardCharsets.UTF_8));
-                regex(cat, string);
+                try {
+                    regex(cat, string);
+                } catch (ItemAlreadyExistsException e) {
+                    e.printStackTrace();
+                }
             }
-        } catch (ItemAlreadyExistsException e) {
-            e.printStackTrace();
         }
     }
 
@@ -64,10 +61,12 @@ public class CatalogFileLoader implements CatalogLoader {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String string = new String(line.getBytes("Windows-1251"));
-                regex(cat, string);
+                try {
+                    regex(cat, string);
+                } catch (ItemAlreadyExistsException e) {
+                    e.printStackTrace();
+                }
             }
-        } catch (ItemAlreadyExistsException e) {
-            e.printStackTrace();
         }
     }
 
